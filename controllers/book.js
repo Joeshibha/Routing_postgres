@@ -2,31 +2,16 @@ const db = require("../db");
 const DEFAULT_EXPIRATION = 3600;
 const redis = require("redis");
 const client = redis.createClient();
-
-const rredis=require("ioredis")
-const rclient=new rredis()
-
 client.on("connect", () => console.log("Connected to REDIS!"));
 client.on("error", (err) => console.log("Error connecting to REDIS: ", err));
 client.connect();
 
 module.exports.getallbooks = async (req, h) => {
   try {
-    const {userid}=req.query
-    const currReqs=await rateCounter(userid)
-    if(currReqs>5){
-      return h.response({ error: "Too many requests, try again later" }).code(429); 
-    }
-    const books = await getOrSetCache(`books`, async () => {
-      const results = await db
-        .query("SELECT * FROM book")
-        .catch(console.error);
-      return results.rows;
-    });
-    return books;
-  
-  } catch (error) {
-    return { error: error.message };
+    const results = await db.query("SELECT * FROM book");
+    return results.rows;
+  } catch (err) {
+    return { error: "Error fetching books" };
   }
 };
 
@@ -103,7 +88,7 @@ module.exports.deletebook = async (req, h) => {
       [bookid]
     );
     return h.response(results.rows).code(200);
-  } catch (error) {
+  } catch (err) {
     return h.response({ error: error.message }).code(500);
   }
 };

@@ -8,6 +8,7 @@ module.exports.getallauthor = async (req, h) => {
     });
     return authors
   } catch (error) {
+    console.error(error);
     return h.response({ error: error.message }).code(500);
   }
 };
