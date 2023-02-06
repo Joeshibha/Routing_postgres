@@ -2,8 +2,6 @@ const acontroller = require("./controllers/author");
 const bcontroller = require("./controllers/book");
 const Joi = require("joi");
 
-
-
 module.exports = [
   {
     method: "GET",
