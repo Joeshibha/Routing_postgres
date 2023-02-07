@@ -1,6 +1,6 @@
 "use strict";
 const Hapi = require("@hapi/hapi");
-
+const db = require("./db");
 
 const routes=require('./routes')
 const server = Hapi.Server({

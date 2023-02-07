@@ -2,11 +2,11 @@ const db = require("../db");
 const Hapi = require("@hapi/hapi");
 module.exports.getallauthor = async (req, h) => {
   try {
-    const authors = await getOrSetCache("authors", async () => {
+    
       const results = await db.query("SELECT * FROM author ORDER BY authorid ASC").catch(console.error);
       return results.rows;
-    });
-    return authors
+  
+
   } catch (error) {
     console.error(error);
     return h.response({ error: error.message }).code(500);
@@ -66,7 +66,14 @@ module.exports.getresults = async (req, h) => {
   );
   return h.response(results.rows).code(200);
 };
-
+module.exports.search = async (req, h) => {
+  const authorname = req.query.authorname;
+  const results = await db.query(
+    "SELECT * FROM book INNER JOIN author ON book.authorid=author.authorid WHERE author.authorid=$1",
+    [authorid]
+  );
+  return h.response(results.rows).code(200);
+};
 /* module.exports.getjoinresults = async (req, h) => {
   const authorid = req.params.authorid;
   const results = await db.query(
