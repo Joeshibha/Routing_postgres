@@ -1,5 +1,6 @@
 const acontroller = require("./controllers/author");
 const bcontroller = require("./controllers/book");
+const mq=require("./controllers/mq")
 const Joi = require("joi");
 
 module.exports = [
@@ -153,4 +154,6 @@ module.exports = [
       },
     },
   },
+  { method: "GET", path: "/api/v1/emailmq", handler: mq.mail },
 ];
+

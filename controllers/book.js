@@ -10,6 +10,11 @@ client.on("connect", () => console.log("Connected to REDIS!"));
 client.on("error", (err) => console.log("Error connecting to REDIS: ", err));
 client.connect();
 
+const Elasticsearch = require('elasticsearch');
+const eclient = new Elasticsearch.Client({
+  host: 'localhost:9200',
+});
+
 module.exports.getallbooks = async (req, h) => {
   try {
     const {userid}=req.query
@@ -51,15 +56,7 @@ module.exports.postbook = async (req, h) => {
       published_date,
       authorid,
     } = req.payload;
-    console.log(
-      bookname,
-      publishername,
-      category,
-      copies,
-      rating,
-      published_date,
-      authorid
-    );
+    
     const results = await db.query(
       "insert into book(bookname, publishername,category,copies,rating,published_date,authorid)VALUES($1,$2,$3,$4,$5,$6,$7) RETURNING *",
       [
@@ -72,17 +69,10 @@ module.exports.postbook = async (req, h) => {
         authorid,
       ]
     );
-    console.log(
-      bookname,
-      publishername,
-      category,
-      copies,
-      rating,
-      published_date,
-      authorid
-    );
-    return h.response(results.rows).code(201);
+    //const er=await eclient.index({index:'create_data',type:'_doc',body:bookname})
+    return results
   } catch (err) {
+    console.log(err)
     return h.response({ error: "Error creating book details" }).code(500);
   }
 };
