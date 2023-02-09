@@ -154,7 +154,10 @@ module.exports = [
       },
     },
   },
-  { method: "GET", path: "/api/v1/emailmq", handler: mq.mail },
-  { method: "GET", path: "/api/v1/elastic/authors", handler: acontroller.search  },
+  { method: "GET", path: "/api/v1/emailmq", handler: mq.messagequeue },
+
+
+  
+  { method: "GET", path: "/api/v1/elastic/authors", handler: acontroller.esearch  },
 ];
 
